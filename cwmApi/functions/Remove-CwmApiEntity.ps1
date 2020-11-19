@@ -6,7 +6,7 @@ function Remove-CwmApiEntity {
         [String]$grandParentId
     )
     DynamicParam {
-        $Script:cwmApiGetEntityParameter
+        $Script:cwmApiDeleteEntityParameter
     }
 
     begin {
