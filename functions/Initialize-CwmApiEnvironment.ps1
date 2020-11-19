@@ -42,7 +42,7 @@ function Initialize-CwmApiEnvironment {
     #get structure
     if ( ( $PSBoundParameters.ContainsKey( 'version')  ) -eq $true ) {
         $structureXmlFileUrl = switch( $version ) {
-            "2020.4" { "https://raw.githubusercontent.com/pncit/cwmApi/main/private/cwmApi_2020.4.xml" }
+            "2020.4" { "https://raw.githubusercontent.com/pncit/cwmApi/main/data/cwmApi_2020.4.xml" }
             default { $null }
         }
         if ( $null -eq $structureXmlFileUrl ) {
