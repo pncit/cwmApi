@@ -116,13 +116,13 @@ function Get-CwmApiEntity {
         if ( $grandParentId ) {
             $endpoint = $endpoint.replace( '{grandParentId}' , $grandParentId )
         }
-        if ( $grandParentId ) {
+        if ( $catalogItemIdentifier ) {
             $endpoint = $endpoint.replace( '{catalogItemIdentifier}' , $catalogItemIdentifier )
         }
-        if ( $grandParentId ) {
+        if ( $externalId ) {
             $endpoint = $endpoint.replace( '{externalId}' , $externalId )
         }
-        if ( $grandParentId ) {
+        if ( $reportName ) {
             $endpoint = $endpoint.replace( '{reportName}' , $reportName )
         }
 
