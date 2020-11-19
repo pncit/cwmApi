@@ -1,37 +1,63 @@
-function Set-CwmApiEnvironment {
-    [CmdletBinding()]
-    [CmdletBinding()]
+function Initialize-CwmApiEnvironment {
+    [CmdletBinding(DefaultParameterSetName = 'byVersion')]
     param (
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory=$True,ParameterSetName = "byVersion")]
+        [Parameter(Mandatory=$True,ParameterSetName = "byXml")]
         [ValidateSet("au","eu","na")]
         [string]
         $apiRegion,
 
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory=$True,ParameterSetName = "byVersion")]
+        [Parameter(Mandatory=$True,ParameterSetName = "byXml")]
         [validateNotNullorEmpty()]
         [string]
         $company,
 
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory=$True,ParameterSetName = "byVersion")]
+        [validateNotNullorEmpty()]
+        [string]
+        $version,
+
+        [Parameter(Mandatory=$True,ParameterSetName = "byXml")]
         [validateNotNullorEmpty()]
         [string]
         $structureXmlFile,
 
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory=$True,ParameterSetName = "byVersion")]
+        [Parameter(Mandatory=$True,ParameterSetName = "byXml")]
         [validateNotNullorEmpty()]
         [string]$publicKey,
 
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory=$True,ParameterSetName = "byVersion")]
+        [Parameter(Mandatory=$True,ParameterSetName = "byXml")]
         [validateNotNullorEmpty()]
         [string]$privateKey,
 
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory=$True,ParameterSetName = "byVersion")]
+        [Parameter(Mandatory=$True,ParameterSetName = "byXml")]
         [validateNotNullorEmpty()]
         [string]$clientId
     )
 
     #get structure
-    $structure = Import-Clixml -Path $structureXmlFile
+    if ( ( $PSBoundParameters.ContainsKey( 'version')  ) -eq $true ) {
+        $structureXmlFileUrl = switch( $version ) {
+            "2020.4" { "https://raw.githubusercontent.com/pncit/cwmApi/main/private/cwmApi_2020.4.xml" }
+            default { $null }
+        }
+        if ( $null -eq $structureXmlFileUrl ) {
+            Throw "Unable to find xml file for requested version ($version)"
+        }
+        $structureXmlFile = "$home\_cwmStructure_temp.xml"
+        (New-Object System.Net.WebClient).DownloadFile( $structureXmlFileUrl , $structureXmlFile )
+        $structure = Import-Clixml -Path $structureXmlFile
+        Remove-Item $structureXmlFile
+        if ( $structure.version -ne $version ) {
+            Throw "Version in file $structureXmlFileUrl ($($structure.version)) does not match requested version ($version)."
+        }
+    } else {
+        $structure = Import-Clixml -Path $structureXmlFile
+    }
 
     #get api version info
     $versionCode = $structure.version
