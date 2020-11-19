@@ -35,7 +35,7 @@ function Remove-CwmApiEntity {
         
         #confirm we have landed on a single endpoint
         if ( $null -eq $endpoint ) {
-            $endpointCandidates = $Script:cwmApiQueries | Where-Object { $_.get -eq $entity }
+            $endpointCandidates = $Script:cwmApiQueries | Where-Object { $_.delete -eq $entity }
             $message = "Unable to find an endpoint for '$entity' with id=$id, parentId=$parentId, grandparentId=$grandparentId, catalogItemIdentifier=$catalogItemIdentifier, externalId=$externalId, reportName=$reportName, count=$count, list=$list, usages=$usages, merge=$merge, default=$default, withSso=$withSso. Candidates are:`n"
             Throw $message + ( $endpointCandidates.Endpoint | Out-String )
         }

@@ -36,7 +36,7 @@ function Set-CwmApiEntity {
         
         #confirm we have landed on a single endpoint
         if ( $null -eq $endpoint ) {
-            $endpointCandidates = $Script:cwmApiQueries | Where-Object { $_.get -eq $entity }
+            $endpointCandidates = $Script:cwmApiQueries | Where-Object { $_.put -eq $entity }
             $message = "Unable to find an endpoint for '$entity' with id=$id, parentId=$parentId, grandparentId=$grandparentId. Candidates are:`n"
             Throw $message + ( $endpointCandidates.Endpoint | Out-String )
         }
