@@ -15,7 +15,7 @@ function Remove-CwmApiEntity {
 
     process {
         #winnow down to one endpoint based on parameters
-        $endpointCandidates = $Script:cwmApiQueries | Where-Object { $_.get -eq $entity }
+        $endpointCandidates = $Script:cwmApiQueries | Where-Object { $_.delete -eq $entity }
         if ( $id ) {
             $endpointCandidates = $endpointCandidates | Where-Object { $_.id }
         } else {
