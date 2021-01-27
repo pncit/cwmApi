@@ -19,6 +19,8 @@ function New-CwmApiEntity {
         $endpointCandidates = $Script:cwmApiQueries | Where-Object { $_.post -eq $entity }
         #post can go to /search endpoints, but not in the context of this function
         $endpointCandidates = $endpointCandidates | Where-Object { $_.endpoint -NotLike '*/search' }
+        #ignore /defaults endpoints, which cannot be otherwise distinguished from other post endpoints (e.g. time/entries vs time/entries/defaults)
+        $endpointCandidates = $endpointCandidates | Where-Object { $_.endpoint -NotLike '*/defaults' }
         if ( $id ) {
             $endpointCandidates = $endpointCandidates | Where-Object { $_.id }
         } else {
