@@ -9,6 +9,7 @@ function Get-CwmApiEntity {
         [String]$reportName,
         [Switch]$count,
         [Switch]$list,
+        [Switch]$info,
         [Switch]$usages,
         [Switch]$merge,
         [Switch]$default,
@@ -72,6 +73,11 @@ function Get-CwmApiEntity {
             $endpointCandidates = $endpointCandidates | Where-Object { $_.list }
         } else {
             $endpointCandidates = $endpointCandidates | Where-Object { !$_.list }
+        }
+        if ( $info ) {
+            $endpointCandidates = $endpointCandidates | Where-Object { $_.Endpoint -like '*/info*' }
+        } else {
+            $endpointCandidates = $endpointCandidates | Where-Object { $_.Endpoint -notlike '*/info*' }
         }
         if ( $usages ) {
             $endpointCandidates = $endpointCandidates | Where-Object { $_.usages }
