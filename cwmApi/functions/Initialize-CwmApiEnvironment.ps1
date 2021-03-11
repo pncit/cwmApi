@@ -39,6 +39,11 @@ function Initialize-CwmApiEnvironment {
         [string]$clientId
     )
 
+    #get company api info
+    $companyApiInfo = ( Invoke-WebRequest -uri "https://na.myconnectwise.net/login/companyinfo/$company" ).Content | ConvertFrom-Json
+    $companyUrl = $companyApiInfo.SiteUrl
+    $companyVersionCode = $companyApiInfo.VersionCode
+
     #get structure
     if ( ( $PSBoundParameters.ContainsKey( 'version')  ) -eq $true ) {
         $structureXmlFileUrl = switch( $version ) {
@@ -64,8 +69,12 @@ function Initialize-CwmApiEnvironment {
     $versionCode = $structure.version
     $codebase = 'v' + $versionCode.replace( '.' , '_' );
 
+    if ( $companyVersionCode -ne "v$versionCode") {
+        Write-Warning "Default API version for $company is $companyVersionCode, but requested version is v$versionCode. Using v$versionCode as requested."
+    }
+
     #get api url
-    $apiUri = "api-$apiRegion.myconnectwise.net/$codebase/apis/3.0/"
+    $apiUri = "$companyUrl/$codebase/apis/3.0/"
     
     #get auth string
     $user = "$company+$publicKey"
