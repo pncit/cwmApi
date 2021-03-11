@@ -33,13 +33,17 @@ function New-CwmApiRequest {
     [CmdletBinding()]
 	param
 	(
-        [parameter(Mandatory=$true)]
+        [parameter(Mandatory=$true, ParameterSetName='guided')]
         [validateNotNullorEmpty()]
         [string]$endpoint,
 
-        [parameter(Mandatory=$false)]
+        [parameter(Mandatory=$false, ParameterSetName='guided')]
         [validateNotNullorEmpty()]
         [string]$query,
+
+        [parameter(Mandatory=$true, ParameterSetName='direct')]
+        [validateNotNullorEmpty()]
+        [string]$uri,
 
         [parameter(Mandatory=$true)]
         [validateNotNullorEmpty()]
@@ -55,20 +59,22 @@ function New-CwmApiRequest {
         $errorAction = $ErrorActionPreference
     }
 
-    #where a client name has & (e.g. RHW - River Health & Wellness) we need need to replace the & with %26 in order to use CW API, 
-    #but cannot replace all & with %26 because & has a function in REST API calls
-    $escapedQuery = ( [uri]::EscapeUriString( $query ) ).replace( '%20&%20', '%20%26%20' )
-    $uri = "https://" + $Script:cwmApiUri + $endpoint + $escapedQuery
+    if ( $endpoint ) {
+        #where a client name has & (e.g. RHW - River Health & Wellness) we need need to replace the & with %26 in order to use CW API, 
+        #but cannot replace all & with %26 because & has a function in REST API calls
+        $escapedQuery = ( [uri]::EscapeUriString( $query ) ).replace( '%20&%20', '%20%26%20' )
+        $uri = "https://" + $Script:cwmApiUri + $endpoint + $escapedQuery
 
-    #pull maximum records allowable unless query already specifies a count
-    if ( $uri.ToLower().IndexOf( "pagesize" ) -eq -1 ) {
-        if ( $uri.IndexOf( "?" ) -eq -1 ) {
-            $uri += "?pageSize=1000"
-        } else {
-            $uri += "&pageSize=1000" 
+        #pull maximum records allowable unless query already specifies a count
+        if ( $uri.ToLower().IndexOf( "pagesize" ) -eq -1 ) {
+            if ( $uri.IndexOf( "?" ) -eq -1 ) {
+                $uri += "?pageSize=1000"
+            } else {
+                $uri += "&pageSize=1000" 
+            }
         }
     }
-
+    
     #set the parameters for the request
     $params = @{
         Uri         =	$uri
@@ -112,12 +118,11 @@ function New-CwmApiRequest {
             }
         }
         $params = @{
-            "apiUrl" = $nextUrl
-            "authString" = $cwmApiAuthString
+            "uri" = $nextUrl
             "apiMethod" = $apiMethod
         }
         if ( $apiRequestBody ) {
-            $params.Add( 'Body' , $apiRequestBody )
+            $params.Add( 'apiRequestBody' , $apiRequestBody )
         }
         $restOfContent = New-CwmApiRequest @params
         return $content + $restOfContent
