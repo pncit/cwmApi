@@ -65,7 +65,11 @@ function Initialize-CwmApiEnvironment {
             Throw "Version in file $structureXmlFileUrl ($($structure.version)) does not match requested version ($version)."
         }
     } else {
-        $structure = Import-Clixml -Path $structureXmlFile
+        if ( Test-Path $structureXmlFile ) {
+            $structure = Import-Clixml -Path $structureXmlFile
+        } else {
+            Throw "Unable to find requested structure file ($structureXmlFile)"
+        }
     }
 
     #get api version info
