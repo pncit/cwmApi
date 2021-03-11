@@ -1,14 +1,16 @@
 function Initialize-CwmApiEnvironment {
-    [CmdletBinding(DefaultParameterSetName = 'byVersion')]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param (
-        [Parameter(Mandatory=$True,ParameterSetName = "byVersion")]
-        [Parameter(Mandatory=$True,ParameterSetName = "byXml")]
+        [Parameter(Mandatory=$False,ParameterSetName = "byVersion")]
+        [Parameter(Mandatory=$False,ParameterSetName = "byXml")]
+        [Parameter(Mandatory=$False,ParameterSetName = "Default")]
         [ValidateSet("au","eu","na")]
         [string]
         $apiRegion,
 
         [Parameter(Mandatory=$True,ParameterSetName = "byVersion")]
         [Parameter(Mandatory=$True,ParameterSetName = "byXml")]
+        [Parameter(Mandatory=$True,ParameterSetName = "Default")]
         [validateNotNullorEmpty()]
         [string]
         $company,
@@ -25,16 +27,19 @@ function Initialize-CwmApiEnvironment {
 
         [Parameter(Mandatory=$True,ParameterSetName = "byVersion")]
         [Parameter(Mandatory=$True,ParameterSetName = "byXml")]
+        [Parameter(Mandatory=$True,ParameterSetName = "Default")]
         [validateNotNullorEmpty()]
         [string]$publicKey,
 
         [Parameter(Mandatory=$True,ParameterSetName = "byVersion")]
         [Parameter(Mandatory=$True,ParameterSetName = "byXml")]
+        [Parameter(Mandatory=$True,ParameterSetName = "Default")]
         [validateNotNullorEmpty()]
         [string]$privateKey,
 
         [Parameter(Mandatory=$True,ParameterSetName = "byVersion")]
         [Parameter(Mandatory=$True,ParameterSetName = "byXml")]
+        [Parameter(Mandatory=$True,ParameterSetName = "Default")]
         [validateNotNullorEmpty()]
         [string]$clientId
     )
@@ -45,10 +50,13 @@ function Initialize-CwmApiEnvironment {
     $companyApiInfo = ( Invoke-WebRequest -uri "https://na.myconnectwise.net/login/companyinfo/$company" ).Content | ConvertFrom-Json
     $companyUrl = $companyApiInfo.SiteUrl
     $companyVersionCode = $companyApiInfo.VersionCode
+    if ( ( $PSBoundParameters.ContainsKey( 'version') ) -eq $false ) {
+        $version = $companyVersionCode.substring(1)
+    }
 
     #get structure
     Write-Verbose "Getting api structure..."
-    if ( ( $PSBoundParameters.ContainsKey( 'version')  ) -eq $true ) {
+    if ( ( $PSBoundParameters.ContainsKey( 'structureXmlFile') ) -eq $false ) {
         $structureXmlFileUrl = switch( $version ) {
             "2020.4" { "https://raw.githubusercontent.com/pncit/cwmApi/main/data/cwmApi_2020.4.xml" }
             default { $null }
