@@ -38,13 +38,16 @@ function Initialize-CwmApiEnvironment {
         [validateNotNullorEmpty()]
         [string]$clientId
     )
+    Write-Host "Initiating cwmAPI session..."
 
     #get company api info
+    Write-Verbose "Getting $company info..."
     $companyApiInfo = ( Invoke-WebRequest -uri "https://na.myconnectwise.net/login/companyinfo/$company" ).Content | ConvertFrom-Json
     $companyUrl = $companyApiInfo.SiteUrl
     $companyVersionCode = $companyApiInfo.VersionCode
 
     #get structure
+    Write-Verbose "Getting api structure..."
     if ( ( $PSBoundParameters.ContainsKey( 'version')  ) -eq $true ) {
         $structureXmlFileUrl = switch( $version ) {
             "2020.4" { "https://raw.githubusercontent.com/pncit/cwmApi/main/data/cwmApi_2020.4.xml" }
@@ -105,14 +108,17 @@ function Initialize-CwmApiEnvironment {
     }
     
     #save data to variables
+    Write-Verbose "Compiling script variables..."
     $Script:cwmApiUri = $apiUri
     $Script:cwmApiVersionCode = $versionCode
     $Script:cwmApiAuthString = $authString
     $Script:cwmApiClientId = $clientId
     $Script:cwmApiQueries = $structure.queries
+    Write-Verbose "Compiling dynamic parameters..."
     $Script:cwmApiGetEntityParameter = New-EntityDynamicParameter -entityList $structure.getEntityList
     $Script:cwmApiPutEntityParameter = New-EntityDynamicParameter -entityList $structure.putEntityList
     $Script:cwmApiPostEntityParameter = New-EntityDynamicParameter -entityList $structure.postEntityList
     $Script:cwmApiPatchEntityParameter = New-EntityDynamicParameter -entityList $structure.patchEntityList
     $Script:cwmApiDeleteEntityParameter = New-EntityDynamicParameter -entityList $structure.deleteEntityList
+    Write-Host "cwmAPI session initiated."
 }
