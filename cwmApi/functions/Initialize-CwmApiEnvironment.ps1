@@ -47,7 +47,7 @@ function Initialize-CwmApiEnvironment {
 
     #get company api info
     Write-Verbose "Getting $company info..."
-    $companyApiInfo = ( Invoke-WebRequest -uri "https://na.myconnectwise.net/login/companyinfo/$company" ).Content | ConvertFrom-Json
+    $companyApiInfo = ( Invoke-WebRequest -uri "https://na.myconnectwise.net/login/companyinfo/$company" -UseBasicParsing ).Content | ConvertFrom-Json
     $companyUrl = $companyApiInfo.SiteUrl
     $companyVersionCode = $companyApiInfo.VersionCode
     if ( ( $PSBoundParameters.ContainsKey( 'version') ) -eq $false ) {
