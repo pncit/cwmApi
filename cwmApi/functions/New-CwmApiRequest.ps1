@@ -60,6 +60,7 @@ function New-CwmApiRequest {
     }
 
     if ( $endpoint ) {
+        Write-Debug "Endpoint: $endpoint"
         #where a client name has & (e.g. RHW - River Health & Wellness) we need need to replace the & with %26 in order to use CW API, 
         #but cannot replace all & with %26 because & has a function in REST API calls
         $escapedQuery = ( [uri]::EscapeUriString( $query ) ).replace( '%20&%20', '%20%26%20' )
@@ -75,6 +76,9 @@ function New-CwmApiRequest {
         }
     }
     
+    Write-Debug "Uri: $uri"
+    Write-Debug "apiMethod: $apiMethod"
+
     #set the parameters for the request
     $params = @{
         Uri         =	$uri
@@ -90,6 +94,7 @@ function New-CwmApiRequest {
 
     #if body was defined (patch or put), add to params
     if ( $apiRequestBody ) {
+        Write-Debug "apiRequestBody: $apiRequestBody"
         $params.Add( 'Body' , $apiRequestBody )
     }
 
