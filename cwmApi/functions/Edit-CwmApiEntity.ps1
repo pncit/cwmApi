@@ -3,7 +3,7 @@ function Edit-CwmApiEntity {
     Param (
         [string]$op,
         [string]$path,
-        [string]$value,
+        $value,
         [String]$id,
         [String]$parentId,
         [String]$grandParentId
@@ -58,14 +58,17 @@ function Edit-CwmApiEntity {
             $endpoint = $endpoint.replace( '{grandParentId}' , $grandParentId )
         }
 
-        $apiRequestBody = @{
+        $apiRequestBody =  ( @{
             op = $op
             path = $path
             value = $value
-        } | ConvertTo-Json
+        } ) | ConvertTo-Json
+
         $apiRequestBody = "[$apiRequestBody]"
 
         #set parameters to call New-CwmApiRequest
+        Write-Debug "endpoint: $endpoint"
+        Write-Debug "apiRequestBody: $apiRequestBody"
         $params = @{
             endpoint = $endpoint
             apiMethod = "patch"
