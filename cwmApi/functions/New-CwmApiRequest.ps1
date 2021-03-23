@@ -66,7 +66,7 @@ function New-CwmApiRequest {
         $uri = "https://" + $Script:cwmApiUri + $endpoint + $escapedQuery
 
         #pull maximum records allowable unless query already specifies a count
-        if ( $uri.ToLower().IndexOf( "pagesize" ) -eq -1 ) {
+        if ( $uri.ToLower().IndexOf( "pagesize" ) -eq -1 -and $apiRequestBody -ieq "get" ) {
             if ( $uri.IndexOf( "?" ) -eq -1 ) {
                 $uri += "?pageSize=1000"
             } else {
