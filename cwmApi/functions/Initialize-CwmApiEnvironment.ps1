@@ -60,6 +60,7 @@ function Initialize-CwmApiEnvironment {
         $structureXmlFileUrl = switch( $version ) {
             "2020.4" { "https://raw.githubusercontent.com/pncit/cwmApi/main/data/cwmApi_2020.4.xml" }
             "2021.1" { "https://raw.githubusercontent.com/pncit/cwmApi/main/data/cwmApi_2021.1.xml" }
+            "2021.2" { "https://raw.githubusercontent.com/pncit/cwmApi/main/data/cwmApi_2021.2.xml" }
             default { $null }
         }
         if ( $null -eq $structureXmlFileUrl ) {
