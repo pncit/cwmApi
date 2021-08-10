@@ -5,7 +5,7 @@ function New-CwmApiEntity {
         [String]$id,
         [String]$parentId,
         [String]$grandParentId,
-        [String]$projectOrService
+        [String]$endpointDisambiguationString
     )
     DynamicParam {
         $Script:cwmApiPostEntityParameter
@@ -39,8 +39,8 @@ function New-CwmApiEntity {
         }
         #the TicketNotes endpoint has two 'post' options that cannot be otherwise distinguished
         $endpoint = $endpointCandidates.EndPoint
-        if ( $PSBoundParameters.ContainsKey('projectOrService') ) {
-            $endpoint = ( $endpointCandidates | Where-Object { $_.endpoint -ilike "*$projectOrService*" } ).endpoint
+        if ( $PSBoundParameters.ContainsKey('endpointDisambiguationString') ) {
+            $endpoint = ( $endpointCandidates | Where-Object { $_.endpoint -ilike "*$endpointDisambiguationString*" } ).endpoint
         }
         
         #confirm we have landed on a single endpoint
