@@ -5,6 +5,8 @@ Connectwise Manage API PowerShell
 This module facilitates interaction with the ConnectWise Manage REST API via PowerShell. It is designed to make access simple with picklists and a built-in entity explorer, and also to grow with the ConnectWise Manage API. PickLists and endpoints are dynamically generated from the API JSON file, so updates are fast.
 
 ## Changelog
+- 1.1.6
+    - Added 'projectOrService' parameter to New-CwmApiEntity to distinguish between project tickets and service tickets when create a new TicketNotes item
 - 1.1.5
     - Updated with support for 2021.2 release
 - 1.1.4

@@ -4,7 +4,8 @@ function New-CwmApiEntity {
         [string]$bodyJson,
         [String]$id,
         [String]$parentId,
-        [String]$grandParentId
+        [String]$grandParentId,
+        [String]$projectOrService
     )
     DynamicParam {
         $Script:cwmApiPostEntityParameter
@@ -36,7 +37,11 @@ function New-CwmApiEntity {
         } else {
             $endpointCandidates = $endpointCandidates | Where-Object { !$_.grandParentId }
         }
+        #the TicketNotes endpoint has two 'post' options that cannot be otherwise distinguished
         $endpoint = $endpointCandidates.EndPoint
+        if ( $PSBoundParameters.ContainsKey('projectOrService') ) {
+            $endpoint = ( $endpointCandidates | Where-Object { $_.endpoint -ilike "*$projectOrService*" } ).endpoint
+        }
         
         #confirm we have landed on a single endpoint
         if ( $null -eq $endpoint ) {
