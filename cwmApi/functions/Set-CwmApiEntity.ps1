@@ -4,7 +4,7 @@ function Set-CwmApiEntity {
         [string]$bodyJson,
         [String]$id,
         [String]$parentId,
-        [String]$grandParentId
+        [String]$grandParentId,
         [String]$endpointDisambiguationString
     )
     DynamicParam {

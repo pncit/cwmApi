@@ -3,7 +3,7 @@ function Remove-CwmApiEntity {
     Param (
         [String]$id,
         [String]$parentId,
-        [String]$grandParentId
+        [String]$grandParentId,
         [String]$endpointDisambiguationString
     )
     DynamicParam {

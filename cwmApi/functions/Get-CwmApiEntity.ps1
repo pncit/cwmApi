@@ -20,7 +20,7 @@ function Get-CwmApiEntity {
         [String]$orderBy,
         [String]$fields,
         [String]$pageSize,
-        [String]$pageId
+        [String]$pageId,
         [String]$endpointDisambiguationString
     )
     DynamicParam {
