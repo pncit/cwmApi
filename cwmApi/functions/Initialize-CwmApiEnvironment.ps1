@@ -43,7 +43,7 @@ function Initialize-CwmApiEnvironment {
         [validateNotNullorEmpty()]
         [string]$clientId
     )
-    Write-Host "Initiating cwmAPI session..."
+    Write-Verbose "Initiating cwmAPI session..."
 
     #get company api info
     Write-Verbose "Getting $company info..."
@@ -134,5 +134,5 @@ function Initialize-CwmApiEnvironment {
     $Script:cwmApiPostEntityParameter = New-EntityDynamicParameter -entityList $structure.postEntityList
     $Script:cwmApiPatchEntityParameter = New-EntityDynamicParameter -entityList $structure.patchEntityList
     $Script:cwmApiDeleteEntityParameter = New-EntityDynamicParameter -entityList $structure.deleteEntityList
-    Write-Host "cwmAPI session initiated."
+    Write-Verbose "cwmAPI session initiated."
 }
