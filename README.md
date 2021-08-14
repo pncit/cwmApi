@@ -1,10 +1,39 @@
 # cwmApi
+
 Connectwise Manage API PowerShell
 
 ## Introduction
+
 This module facilitates interaction with the ConnectWise Manage REST API via PowerShell. It is designed to make access simple with picklists and a built-in entity explorer, and also to grow with the ConnectWise Manage API. PickLists and endpoints are dynamically generated from the API JSON file, so updates are fast.
 
+## Examples
+
+### Create Ticket with a Configuration
+
+    Import-Module cwmApi -Force
+    Initialize-CwmApiEnvironment -company $CwmCompany -publicKey $CwmApiPublicKey -privateKey $CwmApiPrivateKey -clientId $CwmApiClientId
+    $CwmConfiguration = Get-CwmApiEntity -Entity Configurations -conditions 'name="Server01"' -fields "company/id,site/id,id,name"
+    $TicketInfo = @{
+        "company" = @{
+            "id" = $CwmConfiguration.company.id
+        }
+        "site" = @{
+            "id" = $CwmConfiguration.site.id
+        }
+        "status" = @{
+            "id" = $NewNoEmailId
+        }
+        "summary" = "Reboot error on $($CwmConfiguration.Name)"
+        "initialDescription" =  ( "Failed to reboot $($CwmConfiguration.Name) as scheduled." )
+    } | ConvertTo-Json
+    $Ticket = New-CwmApiEntity -Entity Tickets -BodyJson $TicketInfo
+    $ConfigurationBody = @{
+        "id" = $CwmConfiguration.id
+    } | ConvertTo-Json
+    New-CwmApiEntity -Entity Tickets -parentId $Ticket.id -BodyJson $ConfigurationBody -endpointDisambiguationString "configurations" | Out-Null
+    
 ## Changelog
+
 - 1.2.1
     - Added clean verbose and debug messaging
     - Added the 'endpointDisambiguationString' parameter to all request functions
