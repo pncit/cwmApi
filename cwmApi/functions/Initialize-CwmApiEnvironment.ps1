@@ -53,6 +53,9 @@ function Initialize-CwmApiEnvironment {
     if ( ( $PSBoundParameters.ContainsKey( 'version') ) -eq $false ) {
         $version = $companyVersionCode.substring(1)
     }
+    Write-Debug -Message "Company URL: $companyUrl"
+    Write-Debug -Message "Company Version: $companyVersionCode"
+    Write-Debug -Message "Requested Version: $version"
 
     #get structure
     Write-Verbose "Getting api structure..."
@@ -66,6 +69,7 @@ function Initialize-CwmApiEnvironment {
         if ( $null -eq $structureXmlFileUrl ) {
             Throw "Unable to find xml file for requested version ($version)"
         }
+        Write-Debug -Message "StructureXmlFileUrl: $structureXmlFileUrl"
         $tmp = [System.IO.Path]::GetTempPath()
         $structureXmlFile = Join-Path $tmp "_cwmStructure_temp.xml"
         (New-Object System.Net.WebClient).DownloadFile( $structureXmlFileUrl , $structureXmlFile )
@@ -85,6 +89,7 @@ function Initialize-CwmApiEnvironment {
     #get api version info
     $versionCode = $structure.version
     $codebase = 'v' + $versionCode.replace( '.' , '_' );
+    Write-Debug -Message "Codebase: $codebase"
 
     if ( $companyVersionCode -ne "v$versionCode") {
         Write-Warning "Default API version for $company is $companyVersionCode, but requested version is v$versionCode. Using v$versionCode as requested."
@@ -92,7 +97,7 @@ function Initialize-CwmApiEnvironment {
 
     #get api url
     $apiUri = "$companyUrl/$codebase/apis/3.0/"
-    
+    Write-Debug -Message "apiUri: $apiUri"
     #get auth string
     $user = "$company+$publicKey"
     $pass = $privateKey
