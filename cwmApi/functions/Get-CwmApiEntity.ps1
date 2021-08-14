@@ -21,6 +21,7 @@ function Get-CwmApiEntity {
         [String]$fields,
         [String]$pageSize,
         [String]$pageId
+        [String]$endpointDisambiguationString
     )
     DynamicParam {
         $Script:cwmApiGetEntityParameter
@@ -100,6 +101,10 @@ function Get-CwmApiEntity {
             $endpointCandidates = $endpointCandidates | Where-Object { !$_.withSso }
         }
         $endpoint = $endpointCandidates.EndPoint
+        #some endpoints cannot be otherwise distinguished
+        if ( $PSBoundParameters.ContainsKey('endpointDisambiguationString') ) {
+            $endpoint = ( $endpointCandidates | Where-Object { $_.endpoint -ilike "*$endpointDisambiguationString*" } ).endpoint
+        }
         
         #confirm we have landed on a single endpoint
         if ( $null -eq $endpoint ) {

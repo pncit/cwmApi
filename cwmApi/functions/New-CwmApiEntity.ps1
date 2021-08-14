@@ -37,7 +37,7 @@ function New-CwmApiEntity {
         } else {
             $endpointCandidates = $endpointCandidates | Where-Object { !$_.grandParentId }
         }
-        #the TicketNotes endpoint has two 'post' options that cannot be otherwise distinguished
+        #some endpoints cannot be otherwise distinguished
         $endpoint = $endpointCandidates.EndPoint
         if ( $PSBoundParameters.ContainsKey('endpointDisambiguationString') ) {
             $endpoint = ( $endpointCandidates | Where-Object { $_.endpoint -ilike "*$endpointDisambiguationString*" } ).endpoint
