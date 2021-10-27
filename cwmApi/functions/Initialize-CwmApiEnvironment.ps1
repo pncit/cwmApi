@@ -49,12 +49,12 @@ function Initialize-CwmApiEnvironment {
     Write-Verbose "Getting $company info..."
     $companyApiInfo = ( Invoke-WebRequest -uri "https://na.myconnectwise.net/login/companyinfo/$company" -UseBasicParsing ).Content | ConvertFrom-Json
     $companyUrl = $companyApiInfo.SiteUrl
-    $companyVersionCode = $companyApiInfo.VersionCode
+    $companyVersion = $companyApiInfo.VersionCode.substring(1)
     if ( ( $PSBoundParameters.ContainsKey( 'version') ) -eq $false ) {
-        $version = $companyVersionCode.substring(1)
+        $version = $companyVersion.substring(1)
     }
     Write-Debug -Message "Company URL: $companyUrl"
-    Write-Debug -Message "Company Version: $companyVersionCode"
+    Write-Debug -Message "Company Version: $companyVersion"
     Write-Debug -Message "Requested Version: $version"
 
     #get structure
@@ -87,15 +87,15 @@ function Initialize-CwmApiEnvironment {
     }
 
     #get api version info
-    $versionCode = $structure.version
-    $codebase = 'v' + $versionCode.replace( '.' , '_' );
-    Write-Debug -Message "Codebase: $codebase"
+    $version = $structure.version
+    Write-Debug -Message "Version: $version"
 
-    if ( $companyVersionCode -ne "v$versionCode") {
-        Write-Verbose "Default API version for $company is $companyVersionCode, but requested version is v$versionCode. Using v$versionCode as requested."
+    if ( $companyVersion -ne $version) {
+        Write-Verbose "Default API version for $company is $companyVersion, but requested version is $version. Using $version as requested."
     }
 
     #get api url
+    $codebase = 'v4_6_release';
     $apiUri = "$companyUrl/$codebase/apis/3.0/"
     Write-Debug -Message "apiUri: $apiUri"
     #get auth string
@@ -129,7 +129,7 @@ function Initialize-CwmApiEnvironment {
     #save data to variables
     Write-Verbose "Compiling script variables..."
     $Script:cwmApiUri = $apiUri
-    $Script:cwmApiVersionCode = $versionCode
+    $Script:cwmApiVersionCode = $version
     $Script:cwmApiAuthString = $authString
     $Script:cwmApiClientId = $clientId
     $Script:cwmApiQueries = $structure.queries

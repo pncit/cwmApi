@@ -87,8 +87,7 @@ function New-CwmApiRequest {
         Headers     =	@{
             'Authorization'	= $Script:cwmApiAuthString
             'clientId' = $Script:cwmApiClientId
-            'Accept' = 'application/vnd.connectwise.com+json'
-            'version' = $Script:cwmApiVersionCode
+            'Accept' = "application/vnd.connectwise.com+json; version=$Script:cwmApiVersionCode"
         }
     }
 
