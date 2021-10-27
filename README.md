@@ -34,6 +34,8 @@ This module facilitates interaction with the ConnectWise Manage REST API via Pow
     
 ## Changelog
 
+- 1.2.2
+    - Converted warning message to verbose message when initializing sessions so that fully automated systems do not have to handle output
 - 1.2.1
     - Added clean verbose and debug messaging
     - Added the 'endpointDisambiguationString' parameter to all request functions

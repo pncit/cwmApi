@@ -92,7 +92,7 @@ function Initialize-CwmApiEnvironment {
     Write-Debug -Message "Codebase: $codebase"
 
     if ( $companyVersionCode -ne "v$versionCode") {
-        Write-Warning "Default API version for $company is $companyVersionCode, but requested version is v$versionCode. Using v$versionCode as requested."
+        Write-Verbose "Default API version for $company is $companyVersionCode, but requested version is v$versionCode. Using v$versionCode as requested."
     }
 
     #get api url
