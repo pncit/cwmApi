@@ -51,7 +51,7 @@ function Initialize-CwmApiEnvironment {
     $companyUrl = $companyApiInfo.SiteUrl
     $companyVersion = $companyApiInfo.VersionCode.substring(1)
     if ( ( $PSBoundParameters.ContainsKey( 'version') ) -eq $false ) {
-        $version = $companyVersion.substring(1)
+        $version = $companyVersion
     }
     Write-Debug -Message "Company URL: $companyUrl"
     Write-Debug -Message "Company Version: $companyVersion"
