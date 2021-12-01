@@ -34,6 +34,8 @@ This module facilitates interaction with the ConnectWise Manage REST API via Pow
     
 ## Changelog
 
+- 1.2.4
+    - Updated with support for 2021.3 release
 - 1.2.3
     - Fixed how the module passes version requests to the API
 - 1.2.2
