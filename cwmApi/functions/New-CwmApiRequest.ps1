@@ -51,7 +51,10 @@ function New-CwmApiRequest {
 
         [parameter(Mandatory=$false)]
         [validateNotNullorEmpty()]
-        [string]$apiRequestBody
+        [string]$apiRequestBody,
+
+        [parameter(Mandatory=$false)]
+        [switch]$getRawResponse
     )
 
     $errorAction = $PSBoundParameters["ErrorAction"]
@@ -104,6 +107,10 @@ function New-CwmApiRequest {
             Write-Error "API Request failed`n$PSItem"
         }
         throw
+    }
+
+    if ( $getRawResponse -eq $true ) {
+        return $response
     }
 
     $content = $response.content | ConvertFrom-Json

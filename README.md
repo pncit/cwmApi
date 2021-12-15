@@ -34,6 +34,8 @@ This module facilitates interaction with the ConnectWise Manage REST API via Pow
     
 ## Changelog
 
+- 1.3.0
+    - Added 'getRawResponse' switch parameter to New-CwmApiResponse that allows user to bystep any processing of API response (useful for file downloads)
 - 1.2.5
     - Added the 'endpointDisambiguationString' parameter to Edit-CwmApiEntity
 - 1.2.4
