@@ -6,7 +6,8 @@ function Edit-CwmApiEntity {
         $value,
         [String]$id,
         [String]$parentId,
-        [String]$grandParentId
+        [String]$grandParentId,
+        [String]$endpointDisambiguationString
     )
     DynamicParam {
         $Script:cwmApiPatchEntityParameter
@@ -35,6 +36,10 @@ function Edit-CwmApiEntity {
             $endpointCandidates = $endpointCandidates | Where-Object { !$_.grandParentId }
         }
         $endpoint = $endpointCandidates.EndPoint
+        #some endpoints cannot be otherwise distinguished
+        if ( $PSBoundParameters.ContainsKey('endpointDisambiguationString') ) {
+            $endpoint = ( $endpointCandidates | Where-Object { $_.endpoint -ilike "*$endpointDisambiguationString*" } ).endpoint
+        }
 
         #confirm we have landed on a single endpoint
         if ( $null -eq $endpoint ) {
