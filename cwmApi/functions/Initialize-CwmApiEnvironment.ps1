@@ -71,8 +71,9 @@ function Initialize-CwmApiEnvironment {
             Throw "Unable to find xml file for requested version ($version)"
         }
         Write-Debug -Message "StructureXmlFileUrl: $structureXmlFileUrl"
-        $tmp = [System.IO.Path]::GetTempPath()
-        $structureXmlFile = Join-Path $tmp "_cwmStructure_temp.xml"
+        $TmpDir = [System.IO.Path]::GetTempPath()
+        $TmpName = "_cwmStructure_temp_" + ( Get-Random -Maximum 999999 ) + ".xml"
+        $structureXmlFile = Join-Path $tmpDir $TmpName
         (New-Object System.Net.WebClient).DownloadFile( $structureXmlFileUrl , $structureXmlFile )
         $structure = Import-Clixml -Path $structureXmlFile
         Remove-Item $structureXmlFile

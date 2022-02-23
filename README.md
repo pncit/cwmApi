@@ -34,6 +34,8 @@ This module facilitates interaction with the ConnectWise Manage REST API via Pow
     
 ## Changelog
 
+- 1.3.2
+    - Added random suffix to temp api structure xml file to prevent collisions when multiple sessions are being invoked simultaneously
 - 1.3.1
     - Fixed typo so that all GET requests where PageSize is not specified default to 1000
 - 1.3.0
