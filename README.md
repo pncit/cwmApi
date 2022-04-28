@@ -34,6 +34,8 @@ This module facilitates interaction with the ConnectWise Manage REST API via Pow
     
 ## Changelog
 
+- 1.4.0
+    - Added New-CwmApiDocument to upload documents
 - 1.3.2
     - Added random suffix to temp api structure xml file to prevent collisions when multiple sessions are being invoked simultaneously
 - 1.3.1
