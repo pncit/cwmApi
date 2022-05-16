@@ -34,6 +34,8 @@ This module facilitates interaction with the ConnectWise Manage REST API via Pow
     
 ## Changelog
 
+- 1.4.1
+    - Updated with support for 2022.1 release
 - 1.4.0
     - Added New-CwmApiDocument to upload documents
 - 1.3.2
