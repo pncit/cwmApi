@@ -79,6 +79,7 @@ function New-CwmApiRequest {
         }
     }
     
+    Write-Debug $uri
     Write-Debug "Uri: $uri"
     Write-Debug "apiMethod: $apiMethod"
 
@@ -114,11 +115,13 @@ function New-CwmApiRequest {
     }
 
     $content = $response.content | ConvertFrom-Json
-    if ( ( $null -eq $response.Headers['Link'] ) -or ( $response.Headers['Link'].IndexOf( 'rel="next"' ) -eq -1 ) ) {
+    if ( ( $null -eq $response.Headers['Link'] ) -or ( ( $response.Headers['Link'] | Out-String ).IndexOf( 'rel="next"' ) -eq -1 ) ) {
+        Write-Debug 'No more content'
         return $content
     } else {
         #extract 'next' url from a string like
         #<https://api-na.myconnectwise.net/v4_6_release/apis/3.0/service/tickets/?pageSize=1000&page=2>; rel="next", <https://api-na.myconnectwise.net/v4_6_release/apis/3.0/service/tickets/?pageSize=1000&page=230>; rel="last"
+        Write-Debug 'Getting more content'
         $linkInfo = $response.Headers['Link']
         $linkInfo = $linkInfo.Replace('rel=','').Replace('<','').Replace('>','').Replace('"','').Replace(' ','')
         $linkInfo = $linkInfo.Split(',')
