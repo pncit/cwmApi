@@ -34,6 +34,8 @@ This module facilitates interaction with the ConnectWise Manage REST API via Pow
     
 ## Changelog
 
+- 1.4.3
+    - Updated with support for 2025.1 release
 - 1.4.2
     - Fixed code that was limiting some queries to 1000 total responses
 - 1.4.1
