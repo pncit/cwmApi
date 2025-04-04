@@ -5,7 +5,8 @@ function Set-CwmApiEntity {
         [String]$id,
         [String]$parentId,
         [String]$grandParentId,
-        [String]$endpointDisambiguationString
+        [String]$endpointDisambiguationString,
+        [Boolean]$endpointDisambiguationStringInclusive=$true
     )
     DynamicParam {
         $Script:cwmApiPutEntityParameter

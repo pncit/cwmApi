@@ -5,7 +5,8 @@ function New-CwmApiEntity {
         [String]$id,
         [String]$parentId,
         [String]$grandParentId,
-        [String]$endpointDisambiguationString
+        [String]$endpointDisambiguationString,
+        [Boolean]$endpointDisambiguationStringInclusive=$true
     )
     DynamicParam {
         $Script:cwmApiPostEntityParameter
@@ -38,20 +39,34 @@ function New-CwmApiEntity {
             $endpointCandidates = $endpointCandidates | Where-Object { !$_.grandParentId }
         }
         #some endpoints cannot be otherwise distinguished
-        $endpoint = $endpointCandidates.EndPoint
         if ( $PSBoundParameters.ContainsKey('endpointDisambiguationString') ) {
-            $endpoint = ( $endpointCandidates | Where-Object { $_.endpoint -ilike "*$endpointDisambiguationString*" } ).endpoint
-        }
-        
-        #confirm we have landed on a single endpoint
-        if ( $null -eq $endpoint ) {
-            $endpointCandidates = $Script:cwmApiQueries | Where-Object { $_.post -eq $entity }
+          if ( $endpointDisambiguationStringInclusive ) {
+            $endpointCandidates = $endpointCandidates | Where-Object { $_.endpoint -ilike "*$endpointDisambiguationString*" }
+          } else {
+            $endpointCandidates = $endpointCandidates | Where-Object { $_.endpoint -notlike "*$endpointDisambiguationString*" }
+          }
+          $endpoint = $endpointCandidates.endpoint
+          #confirm we have landed on a single endpoint
+          if ( $null -eq $endpoint ) {
+            $endpointCandidates = $Script:cwmApiQueries | Where-Object { $_.patch -eq $entity }
+            $message = "Unable to find an endpoint for '$entity' with id=$id, parentId=$parentId, grandparentId=$grandparentId and including string $endpointDisambiguationString. Candidates are:`n"
+            Throw $message + ( $endpointCandidates.Endpoint | Out-String )
+          }
+          if ( $endpoint.count -gt 1 ) {
+            $message = "Found multiple endpoints for '$entity' with id=$id, parentId=$parentId, grandparentId=$grandparentId and excluding string $endpointDisambiguationString. Found:`n"
+            Throw $message + $endpoint
+          }
+        } else {
+          #confirm we have landed on a single endpoint
+          if ( $null -eq $endpoint ) {
+            $endpointCandidates = $Script:cwmApiQueries | Where-Object { $_.patch -eq $entity }
             $message = "Unable to find an endpoint for '$entity' with id=$id, parentId=$parentId, grandparentId=$grandparentId. Candidates are:`n"
             Throw $message + ( $endpointCandidates.Endpoint | Out-String )
-        }
-        if ( $endpoint.count -gt 1 ) {
+          }
+          if ( $endpoint.count -gt 1 ) {
             $message = "Found multiple endpoints for '$entity' with id=$id, parentId=$parentId, grandparentId=$grandparentId. Found:`n"
             Throw $message + $endpoint
+          }
         }
 
         #manipulate endpoint to reflect parameters

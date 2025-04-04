@@ -34,6 +34,8 @@ This module facilitates interaction with the ConnectWise Manage REST API via Pow
     
 ## Changelog
 
+- 1.5.0
+    - Added the 'endpointDisambiguationStringInclusive boolean to allow excluding search terms
 - 1.4.3
     - Updated with support for 2025.1 release
 - 1.4.2
