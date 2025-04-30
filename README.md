@@ -31,9 +31,11 @@ This module facilitates interaction with the ConnectWise Manage REST API via Pow
         "id" = $CwmConfiguration.id
     } | ConvertTo-Json
     New-CwmApiEntity -Entity Tickets -parentId $Ticket.id -BodyJson $ConfigurationBody -endpointDisambiguationString "configurations" | Out-Null
-    
+
 ## Changelog
 
+- 1.6.0
+    - Added 'allowInsecureRedirect' switch for New-CwmApiEntity cmdlet (Invoke-WebRequest throws an insecure redirection error when the location header is http, even when the response is 201 and no redirection is impending)
 - 1.5.1
     - Fixed the broken logic around the endpointDisambiguationStringInclusive boolean
 - 1.5.0

@@ -20,6 +20,9 @@ function New-CwmApiRequest {
     .PARAMETER apiRequestBody
     API request body
 
+    .PARAMETER allowInsecureRedirect
+    Option for allowing insecure redirects (workaround for POST requests). Default is false.
+
     .OUTPUTS
     [System.Object] custom object containing API response
 
@@ -54,7 +57,10 @@ function New-CwmApiRequest {
         [string]$apiRequestBody,
 
         [parameter(Mandatory=$false)]
-        [switch]$getRawResponse
+        [switch]$getRawResponse,
+
+        [parameter(Mandatory=$false)]
+        [switch]$allowInsecureRedirect
     )
 
     $errorAction = $PSBoundParameters["ErrorAction"]
@@ -100,6 +106,13 @@ function New-CwmApiRequest {
         Write-Debug "apiRequestBody: $apiRequestBody"
         $params.Add( 'Body' , $apiRequestBody )
     }
+
+    #allow insecure redirects if user requested it
+    if ($allowInsecureRedirect) {
+      $params.Add( 'AllowInsecureRedirect' , $true )
+    }
+
+    $params.Add( 'UseBasicParsing' , $true )
 
     #make api request
     try { $response = ( Invoke-WebRequest @params -UseBasicParsing ) | Select-Object StatusCode,Content,Headers }

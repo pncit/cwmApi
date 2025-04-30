@@ -6,7 +6,8 @@ function New-CwmApiEntity {
         [String]$parentId,
         [String]$grandParentId,
         [String]$endpointDisambiguationString,
-        [Boolean]$endpointDisambiguationStringInclusive=$true
+        [Boolean]$endpointDisambiguationStringInclusive=$true,
+        [Switch]$allowInsecureRedirect
     )
     DynamicParam {
         $Script:cwmApiPostEntityParameter
@@ -81,6 +82,7 @@ function New-CwmApiEntity {
             endpoint = $endpoint
             apiMethod = "post"
             apiRequestBody = $bodyJson
+            allowInsecureRedirect = $allowInsecureRedirect
         }
 
         #make api call
