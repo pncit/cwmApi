@@ -112,8 +112,6 @@ function New-CwmApiRequest {
       $params.Add( 'AllowInsecureRedirect' , $true )
     }
 
-    $params.Add( 'UseBasicParsing' , $true )
-
     #make api request
     try { $response = ( Invoke-WebRequest @params -UseBasicParsing ) | Select-Object StatusCode,Content,Headers }
     catch {

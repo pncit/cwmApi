@@ -34,6 +34,8 @@ This module facilitates interaction with the ConnectWise Manage REST API via Pow
 
 ## Changelog
 
+- 1.6.1
+    - Removed duplicate addition of the UseBasicParsing parameter to Invoke-WebRequest
 - 1.6.0
     - Added 'allowInsecureRedirect' switch for New-CwmApiEntity cmdlet (Invoke-WebRequest throws an insecure redirection error when the location header is http, even when the response is 201 and no redirection is impending)
 - 1.5.1
