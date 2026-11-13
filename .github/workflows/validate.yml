@@ -6,17 +6,18 @@ permissions:
   contents: read
 
 jobs:
-  validate:
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            shell: pwsh
-          - os: windows-latest
-            shell: powershell
-    runs-on: ${{ matrix.os }}
+  validate-core:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Validate catalog and module offline
-        shell: ${{ matrix.shell }}
+        shell: pwsh
+        run: ./tests/Validate-CwmApi.ps1
+
+  validate-windows-powershell:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate module on Windows PowerShell 5.1
+        shell: powershell
         run: ./tests/Validate-CwmApi.ps1
