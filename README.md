@@ -8,6 +8,20 @@ This module facilitates interaction with the ConnectWise Manage REST API via Pow
 
 ## Examples
 
+### Select API version 2026.11
+
+    Import-Module cwmApi -Force
+    Initialize-CwmApiEnvironment -company $CwmCompany -publicKey $CwmApiPublicKey -privateKey $CwmApiPrivateKey -clientId $CwmApiClientId -version '2026.11'
+
+When `-version` is omitted, the module selects the company's API version. To use a local catalog, pass `-structureXmlFile ./data/cwmApi_2026.11.xml` instead of `-version`.
+
+The 2026.11 catalog includes company service templates, template tasks and resources, ticket contact authentication, custom field information, and the other endpoints in the supplied specification. Use `Get-CwmApiEndpoints -matches 'serviceTemplates'` to explore paths and `-endpointDisambiguationString` when multiple paths match an entity.
+
+New path parameters are available for expense report attachments and standard reports:
+
+    Get-CwmApiEntity -Entity ExpenseReports -id 123 -memberRecId 456
+    New-CwmApiEntity -Entity Reports -reportlink 'My Report' -bodyJson '{}'
+
 ### Create Ticket with a Configuration
 
     Import-Module cwmApi -Force
@@ -32,8 +46,23 @@ This module facilitates interaction with the ConnectWise Manage REST API via Pow
     } | ConvertTo-Json
     New-CwmApiEntity -Entity Tickets -parentId $Ticket.id -BodyJson $ConfigurationBody -endpointDisambiguationString "configurations" | Out-Null
 
+## Catalog generation and validation
+
+Generating catalogs requires PowerShell 7 or later to preserve JSON keys that differ only by case. The module still supports Windows PowerShell 5.1 and PowerShell Core.
+
+    . ./functions/Set-CwmApiStructure.ps1
+    Set-CwmApiStructure -jsonFile ./data/cwmApi_2026.11.json -xmlFile ./data/cwmApi_2026.11.xml
+
+Run the offline validation from the repository root. It checks the catalog, version selection, entity parameters, and outgoing requests without using API credentials:
+
+    ./tests/Validate-CwmApi.ps1
+
 ## Changelog
 
+- 1.6.2
+    - Added support for API version 2026.11 and its generated endpoint catalog.
+    - Preserved paths that differ only by case during catalog generation (requires PowerShell 7 or later).
+    - Added `memberRecId` to `Get-CwmApiEntity` and `reportlink` to `New-CwmApiEntity`.
 - 1.6.1
     - Removed duplicate addition of the UseBasicParsing parameter to Invoke-WebRequest
 - 1.6.0

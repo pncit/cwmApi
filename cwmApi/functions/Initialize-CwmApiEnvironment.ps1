@@ -67,6 +67,7 @@ function Initialize-CwmApiEnvironment {
           "2021.3" { "https://raw.githubusercontent.com/pncit/cwmApi/main/data/cwmApi_2021.3.xml" }
           "2022.1" { "https://raw.githubusercontent.com/pncit/cwmApi/main/data/cwmApi_2022.1.xml" }
           "2025.1" { "https://raw.githubusercontent.com/pncit/cwmApi/main/data/cwmApi_2025.1.xml" }
+          "2026.11" { "https://raw.githubusercontent.com/pncit/cwmApi/main/data/cwmApi_2026.11.xml" }
             default { $null }
         }
         if ( $null -eq $structureXmlFileUrl ) {
