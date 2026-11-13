@@ -1,3 +1,5 @@
+#requires -Version 7.0
+
 function Set-CwmApiStructure {
     Param(
         [Parameter(Mandatory=$True)]
@@ -47,11 +49,12 @@ function Set-CwmApiStructure {
         return $entities
     }
 
-    $cwmApi = Get-Content $jsonFile -raw | ConvertFrom-Json
+    # Preserve paths that differ only by case (for example AllowedFileTypes).
+    $cwmApi = Get-Content $jsonFile -raw | ConvertFrom-Json -AsHashtable -ErrorAction Stop
 
     Write-Host "Processing $($cwmApi.info.title), version $($cwmApi.info.version) ($($cwmApi.openapi)) . . ."
 
-    $queries = foreach ( $path in $cwmApi.Paths.psObject.Properties ) {
+    $queries = foreach ( $path in $cwmApi.paths.GetEnumerator() ) {
         if ( $path.Name -NotLike "*regex*" ) {
             [PSCustomObject]@{
                 Endpoint = $path.Name
@@ -66,6 +69,8 @@ function Set-CwmApiStructure {
                 catalogItemIdentifier = $path.Name -Like "*{catalogItemIdentifier}*"
                 externalId = $path.Name -Like "*{externalId}*"
                 reportName = $path.Name -Like "*{reportName}*"
+                memberRecId = $path.Name -Like "*{memberRecId}*"
+                reportlink = $path.Name -Like "*{reportlink}*"
                 list = $path.Name -Like "*/list"
                 count = $path.Name -Like "*/count"
                 usages = $path.Name -Like "*/usages" -or $path.Name -Like "*/usages/*"
