@@ -22,7 +22,8 @@ function Get-CwmApiEntity {
         [String]$pageSize,
         [String]$pageId,
         [String]$endpointDisambiguationString,
-        [Boolean]$endpointDisambiguationStringInclusive=$true
+        [Boolean]$endpointDisambiguationStringInclusive=$true,
+        [String]$memberRecId
     )
     DynamicParam {
         $Script:cwmApiGetEntityParameter
@@ -65,6 +66,11 @@ function Get-CwmApiEntity {
             $endpointCandidates = $endpointCandidates | Where-Object { $_.reportName }
         } else {
             $endpointCandidates = $endpointCandidates | Where-Object { !$_.reportName }
+        }
+        if ( $memberRecId ) {
+            $endpointCandidates = $endpointCandidates | Where-Object { $_.memberRecId }
+        } else {
+            $endpointCandidates = $endpointCandidates | Where-Object { !$_.memberRecId }
         }
         if ( $count ) {
             $endpointCandidates = $endpointCandidates | Where-Object { $_.count }
@@ -147,6 +153,10 @@ function Get-CwmApiEntity {
         }
         if ( $reportName ) {
             $endpoint = $endpoint.replace( '{reportName}' , $reportName )
+        }
+
+        if ( $memberRecId ) {
+            $endpoint = $endpoint.replace( '{memberRecId}' , $memberRecId )
         }
 
         #build query

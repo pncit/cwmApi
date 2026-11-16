@@ -7,7 +7,8 @@ function New-CwmApiEntity {
         [String]$grandParentId,
         [String]$endpointDisambiguationString,
         [Boolean]$endpointDisambiguationStringInclusive=$true,
-        [Switch]$allowInsecureRedirect
+        [Switch]$allowInsecureRedirect,
+        [String]$reportlink
     )
     DynamicParam {
         $Script:cwmApiPostEntityParameter
@@ -38,6 +39,11 @@ function New-CwmApiEntity {
             $endpointCandidates = $endpointCandidates | Where-Object { $_.grandParentId }
         } else {
             $endpointCandidates = $endpointCandidates | Where-Object { !$_.grandParentId }
+        }
+        if ( $reportlink ) {
+            $endpointCandidates = $endpointCandidates | Where-Object { $_.reportlink }
+        } else {
+            $endpointCandidates = $endpointCandidates | Where-Object { !$_.reportlink }
         }
         #some endpoints cannot be otherwise distinguished
         if ( $PSBoundParameters.ContainsKey('endpointDisambiguationString') ) {
@@ -75,6 +81,10 @@ function New-CwmApiEntity {
         }
         if ( $grandParentId ) {
             $endpoint = $endpoint.replace( '{grandParentId}' , $grandParentId )
+        }
+
+        if ( $reportlink ) {
+            $endpoint = $endpoint.replace( '{reportlink}' , [uri]::EscapeDataString($reportlink) )
         }
 
         #set parameters to call New-CwmApiRequest

@@ -1,0 +1,23 @@
+name: Validate
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Validate catalog and module offline
+        shell: pwsh
+        run: ./tests/Validate-CwmApi.ps1
+
+  validate-windows-powershell:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Validate module on Windows PowerShell 5.1
+        shell: powershell
+        run: ./tests/Validate-CwmApi.ps1
